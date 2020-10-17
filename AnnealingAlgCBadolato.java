@@ -5,10 +5,7 @@
  */
 package annealingalgcbadolato;
 
-import static java.lang.System.out;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Stack;
 
 /**
@@ -57,34 +54,19 @@ public class AnnealingAlgCBadolato {
         } 
         System.out.println();
         printList(blockList);
-        System.out.println();
-        int areaVertical = computeAllVerticalArea(blockList);
-        System.out.println();
-        int areaHorizontal = computeAllHorizontalArea(blockList);
-        System.out.println();
-        System.out.println("Stack:");
-        
-        Stack<String> originalStack = new Stack<String>();
-        originalStack = createStack(splitExpression);
-        while(!originalStack.empty()){
-            System.out.println(originalStack.pop());
-        }   
-       
-        Stack<String> horizontalStack = new Stack<String>();
-        horizontalStack = createStack(allVertical);
-        System.out.println("Horizontal Stack");       
-        while(!horizontalStack.empty()){
-            System.out.println(horizontalStack.pop());
-        } 
-        
-        Stack<String> verticalStack = new Stack<String>();
-        verticalStack = createStack(allHorizontal);
-        System.out.println();
 
-        System.out.println("Vertical Stack");
-        while(!verticalStack.empty()){
-            System.out.println(verticalStack.pop());
-        }     
+
+        int vertcalStackArea = 0;
+        vertcalStackArea = stackVerticalArea(allVertical, blockList);
+
+        int horizontalStackArea = 0;
+        horizontalStackArea = stackHorizontalArea(allHorizontal, blockList);
+        
+        System.out.println();
+        System.out.println();
+        
+        int polishArea = 0;
+        polishArea = polishArea(splitExpression, blockList);
     }
     
     public static class Block{
@@ -99,75 +81,206 @@ public class AnnealingAlgCBadolato {
                    
         }      
     }
-    public static Stack<String> createStack(char[] polishExpression){
-        Stack<String> stack = new Stack<String>();
-        for(int i = 0; i < polishExpression.length; i++){
-            stack.add(Character.toString(polishExpression[i]));
-        }
-        return stack;
-    }  
     
     public static int stackVerticalArea(char[] allVerticalPolish, ArrayList blockList){
         int area = 0;
-        int areaValue1 = 0;
-        int areaValue2 = 0;
-        Block placementBlock = (Block) blockList.get(0);
+        Block placementBlockOne = (Block) blockList.get(0);
+        Block placementBlockTwo = (Block) blockList.get(0);
+        int maxHeight = placementBlockOne.height;
+        int widthSum = placementBlockOne.width;
+        int areaArray[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        int multipleBeforeChar = 0;   
         
+      
         Stack<String> stack = new Stack<String>();
         for(int i = 0; i < allVerticalPolish.length; i++){
-            if(allVerticalPolish[i] == 'V'){               
-                areaValue2 = Integer.parseInt(stack.pop());
+                
+            if(allVerticalPolish[i] == 'V'){
+                if(multipleBeforeChar > 1){
+                    placementBlockOne = (Block)blockList.get(Integer.parseInt(stack.pop())- 2);             
+                    placementBlockTwo = (Block)blockList.get(Integer.parseInt(stack.pop()));
+
+                    widthSum = placementBlockOne.width + placementBlockTwo.width;
+                    maxHeight = findMax(maxHeight,placementBlockOne,placementBlockTwo);
+                    areaArray[i] = maxHeight * widthSum;
+                    multipleBeforeChar = 0;
+                }
+                else{
+                    placementBlockOne = (Block)blockList.get(Integer.parseInt(stack.pop())- 1);
+
+                    widthSum = widthSum + placementBlockOne.width;              
+                    maxHeight = findMax(maxHeight,placementBlockOne,placementBlockTwo);
+                    areaArray[i] = maxHeight * widthSum;
+                    multipleBeforeChar = 0;
+                }
                
             }
             else{
+             
                 stack.add(Character.toString(allVerticalPolish[i]));
+                multipleBeforeChar = multipleBeforeChar + 1;
             }
+            
         }
-        return area;
-    }
-    
-    public static int computeAllVerticalArea(ArrayList blockList){
-        int area = 0;     
-        Block placementBlock = (Block) blockList.get(0);
-        int maxHeight = placementBlock.height;
-        int widthSum = placementBlock.width;
-        for(int i = 1; i < blockList.size(); i++){
-            placementBlock = (Block) blockList.get(i);
-            if(maxHeight < placementBlock.height){
-                maxHeight = placementBlock.height;
-            }
-            else{  
-                
-            }  
-            widthSum = widthSum + placementBlock.width;
-        }
-        System.out.println("width sum: " + widthSum);
-        System.out.println("height Max: " + maxHeight);
         area = widthSum * maxHeight;
-        System.out.println("Area Vertical: " + area);
+
+        System.out.println();
+        System.out.println("areaArray:");      
+        for (int i = 0; i < areaArray.length; i++){
+            System.out.print(areaArray[i] + " ");
+        }
         return area;
     }
     
-    public static int computeAllHorizontalArea(ArrayList blockList){
-        int area = 0;     
-        Block placementBlock = (Block) blockList.get(0);
-        int heightSum = placementBlock.height;
-        int widthMax = placementBlock.width;
-        for(int i = 1; i < blockList.size(); i++){
-            placementBlock = (Block) blockList.get(i);
-            if(widthMax < placementBlock.width){
-                widthMax = placementBlock.width;
+    public static int stackHorizontalArea(char[] allHorizontalPolish, ArrayList blockList){
+        int area = 0;
+        Block placementBlockOne = (Block) blockList.get(0);
+        Block placementBlockTwo = (Block) blockList.get(0);
+        int maxWidth = placementBlockOne.width;
+        int heightSum = placementBlockOne.height;
+        int areaArray[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        int multipleBeforeChar = 0;   
+        
+        
+        Stack<String> stack = new Stack<String>();
+        for(int i = 0; i < allHorizontalPolish.length; i++){
+               
+            if(allHorizontalPolish[i] == 'H'){
+                if(multipleBeforeChar > 1){
+                    placementBlockOne = (Block)blockList.get(Integer.parseInt(stack.pop())- 2);             
+                    placementBlockTwo = (Block)blockList.get(Integer.parseInt(stack.pop()));
+                    heightSum = placementBlockOne.height + placementBlockTwo.height;
+                    maxWidth = findMax(maxWidth,placementBlockOne,placementBlockTwo);
+                    areaArray[i] = maxWidth * heightSum;
+                    multipleBeforeChar = 0;
+                }
+                else{
+                    placementBlockOne = (Block)blockList.get(Integer.parseInt(stack.pop())- 1);
+
+                    heightSum = heightSum + placementBlockOne.height;
+                    maxWidth = findMax(maxWidth,placementBlockOne,placementBlockTwo);
+                    areaArray[i] = maxWidth * heightSum;
+                    multipleBeforeChar = 0;
+                }            
             }
-            else{  
-                
-            }  
-            heightSum = heightSum + placementBlock.height;
+            else{
+                stack.add(Character.toString(allHorizontalPolish[i]));
+                multipleBeforeChar = multipleBeforeChar + 1;
+            }
         }
-        System.out.println("height sum: " + heightSum);
-        System.out.println("width Max: " + widthMax);
-        area = heightSum * widthMax;
-        System.out.println("area horizontal: " + area);
+        area = heightSum * maxWidth;
+        System.out.println();
+        System.out.println("areaArray:");
+        for (int i = 0; i < areaArray.length; i++){
+            System.out.print(areaArray[i] + " ");
+        }
         return area;
+    }
+    
+    public static int polishArea(char[] polishExpression, ArrayList blockList){
+        int area = 0;
+        Block placementBlockOne = (Block) blockList.get(0);
+        Block placementBlockTwo = (Block) blockList.get(0);
+        int pop1 = 0;
+        int pop2 = 0;
+        int maxWidth = placementBlockOne.width;
+        int heightSum = placementBlockOne.height;
+        int areaArray[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        int multipleBeforeChar = 0;   
+        
+        System.out.println("Polish Stack Traversal:");
+        Stack<String> stack = new Stack<String>();
+        for(int i = 0; i < polishExpression.length; i++){
+                System.out.println("iteration: " + i);
+            if(polishExpression[i] == 'H'){
+                if(multipleBeforeChar > 1){
+                    pop1 = Integer.parseInt(stack.pop())- 2;
+                    pop2 = Integer.parseInt(stack.pop());
+                    System.out.println();
+                    System.out.println("pop1: " + pop1 + " from Stack");
+                    System.out.println("pop2: " + pop2 + " from Stack");
+                    System.out.println();
+                    placementBlockOne = (Block)blockList.get(pop1 - 2);             
+                    placementBlockTwo = (Block)blockList.get(pop2);
+                    System.out.println("Area Block 1: " + placementBlockOne.area);
+                    System.out.println("Area Block 2: " + placementBlockTwo.area);
+                    System.out.println("Height Block 1: " + placementBlockOne.height);
+                    System.out.println("Width Block 1: " + placementBlockOne.width);
+                    System.out.println("Height Block 2: " + placementBlockTwo.height);                    
+                    System.out.println("Width Block 2: " + placementBlockTwo.width);
+                    multipleBeforeChar = 0;
+                }
+                else{
+                    pop1 = Integer.parseInt(stack.pop());
+                    System.out.println();
+                    System.out.println("pop1: " + pop1 + " from Stack");
+                    System.out.println();
+                    placementBlockOne = (Block)blockList.get(pop1);
+                    System.out.println("Area Block 1: " + placementBlockOne.area);
+                    System.out.println("Height Block 1: " + placementBlockOne.height);
+                    System.out.println("Width Block 1: " + placementBlockOne.width);
+                    multipleBeforeChar = 0;
+                }
+               
+            }
+            else if(polishExpression[i] == 'V'){
+                if(multipleBeforeChar > 1){
+                    pop1 = Integer.parseInt(stack.pop());
+                    pop2 = Integer.parseInt(stack.pop());
+                    System.out.println();
+                    System.out.println("pop1: " + pop1 + " from Stack");
+                    System.out.println("pop2: " + pop2 + " from Stack");
+                    System.out.println();
+                    placementBlockOne = (Block)blockList.get(pop1 - 2);             
+                    placementBlockTwo = (Block)blockList.get(pop2);
+                    System.out.println("Area Block 1: " + placementBlockOne.area);
+                    System.out.println("Area Block 2: " + placementBlockTwo.area);
+                    System.out.println("Height Block 1: " + placementBlockOne.height);
+                    System.out.println("Width Block 1: " + placementBlockOne.width);
+                    System.out.println("Height Block 2: " + placementBlockTwo.height);                    
+                    System.out.println("Width Block 2: " + placementBlockTwo.width);
+                    multipleBeforeChar = 0;
+                }
+                else{
+                    pop1 = Integer.parseInt(stack.pop());
+                    System.out.println();
+                    System.out.println("pop1: " + pop1 + " from Stack");
+                    placementBlockOne = (Block)blockList.get(pop1);    
+                    System.out.println();
+                    System.out.println("Area Block 1: " + placementBlockOne.area);
+                    System.out.println("Height Block 1: " + placementBlockOne.height);
+                    System.out.println("Width Block 1: " + placementBlockOne.width);
+                    multipleBeforeChar = 0;
+                }
+            }
+            else{
+                System.out.println("Add: " + Character.toString(polishExpression[i]) + " to Stack");
+                stack.add(Character.toString(polishExpression[i]));
+                multipleBeforeChar = multipleBeforeChar + 1;
+            }
+            System.out.println();
+        }
+        System.out.println();
+        System.out.println("areaArray:");
+        for (int i = 0; i < areaArray.length; i++){
+            System.out.print(areaArray[i] + " ");
+        }      
+        return area;
+    }
+    
+    
+    public static int findMax(int currentMax, Block currentBlockOne, Block currentBlockTwo){
+        int max = currentMax;
+        if(max < currentBlockOne.height){
+            max = currentBlockOne.height;
+        }
+        else if(max < currentBlockTwo.height){  
+            max = currentBlockTwo.height;
+        }  
+        else{
+
+        }
+        return max;
     }
     
     public static void printList(ArrayList blockList){      
