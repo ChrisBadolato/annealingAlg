@@ -196,7 +196,7 @@ public class AnnealingAlgCBadolato {
                 System.out.println("iteration: " + i);
             if(polishExpression[i] == 'H'){
                 if(multipleBeforeChar > 1){
-                    pop1 = Integer.parseInt(stack.pop())- 2;
+                    pop1 = Integer.parseInt(stack.pop());
                     pop2 = Integer.parseInt(stack.pop());
                     System.out.println();
                     System.out.println("H pop1: " + pop1 + " from Stack");
@@ -213,11 +213,11 @@ public class AnnealingAlgCBadolato {
                     multipleBeforeChar = 0;
                 }
                 else if (multipleBeforeChar == 1){
-                    pop1 = Integer.parseInt(stack.pop()) - 1;
+                    pop1 = Integer.parseInt(stack.pop());
                     System.out.println();
                     System.out.println("H pop1: " + pop1 + " from Stack");
                     System.out.println();
-                    placementBlockOne = (Block)blockList.get(pop1);
+                    placementBlockOne = (Block)blockList.get(pop1 - 1);
                     System.out.println("Area Block 1: " + placementBlockOne.area);
                     System.out.println("Height Block 1: " + placementBlockOne.height);
                     System.out.println("Width Block 1: " + placementBlockOne.width);
@@ -228,7 +228,7 @@ public class AnnealingAlgCBadolato {
                         pop1 = Integer.parseInt(stack.pop()) - 1;
                         System.out.println();
                         System.out.println("H pop1: " + pop1 + " from Stack");
-                        placementBlockOne = (Block)blockList.get(pop1);    
+                        placementBlockOne = (Block)blockList.get(pop1 - 1);    
                         System.out.println();
                         System.out.println("Area Block 1: " + placementBlockOne.area);
                         System.out.println("Height Block 1: " + placementBlockOne.height);
@@ -246,8 +246,8 @@ public class AnnealingAlgCBadolato {
                     System.out.println("V pop1: " + pop1 + " from Stack");
                     System.out.println("V pop2: " + pop2 + " from Stack");
                     System.out.println();
-                    placementBlockOne = (Block)blockList.get(pop1 - 2);             
-                    placementBlockTwo = (Block)blockList.get(pop2);
+                    placementBlockOne = (Block)blockList.get(pop1 - 1);             
+                    placementBlockTwo = (Block)blockList.get(pop2 - 1);
                     System.out.println("Area Block 1: " + placementBlockOne.area);
                     System.out.println("Area Block 2: " + placementBlockTwo.area);
                     System.out.println("Height Block 1: " + placementBlockOne.height);
@@ -257,10 +257,10 @@ public class AnnealingAlgCBadolato {
                     multipleBeforeChar = 0;
                 }
                 else if (multipleBeforeChar == 1){
-                    pop1 = Integer.parseInt(stack.pop()) - 1;
+                    pop1 = Integer.parseInt(stack.pop());
                     System.out.println();
                     System.out.println("V pop1: " + pop1 + " from Stack");
-                    placementBlockOne = (Block)blockList.get(pop1);    
+                    placementBlockOne = (Block)blockList.get(pop1 - 1);    
                     System.out.println();
                     System.out.println("Area Block 1: " + placementBlockOne.area);
                     System.out.println("Height Block 1: " + placementBlockOne.height);
@@ -269,10 +269,10 @@ public class AnnealingAlgCBadolato {
                 }
                 else{
                     if(!stack.empty()){
-                        pop1 = Integer.parseInt(stack.pop()) - 1;
+                        pop1 = Integer.parseInt(stack.pop());
                         System.out.println();
                         System.out.println("V pop1: " + pop1 + " from Stack");
-                        placementBlockOne = (Block)blockList.get(pop1);    
+                        placementBlockOne = (Block)blockList.get(pop1 - 1);    
                         System.out.println();
                         System.out.println("Area Block 1: " + placementBlockOne.area);
                         System.out.println("Height Block 1: " + placementBlockOne.height);
