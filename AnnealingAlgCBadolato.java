@@ -88,6 +88,7 @@ public class AnnealingAlgCBadolato {
         Block placementBlockTwo = (Block) blockList.get(0);
         int maxHeight = placementBlockOne.height;
         int widthSum = placementBlockOne.width;
+        int maxWidth = 0;
         int areaArray[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
         int multipleBeforeChar = 0;   
         
@@ -101,7 +102,7 @@ public class AnnealingAlgCBadolato {
                     placementBlockTwo = (Block)blockList.get(Integer.parseInt(stack.pop()));
 
                     widthSum = placementBlockOne.width + placementBlockTwo.width;
-                    maxHeight = findMax(maxHeight,placementBlockOne,placementBlockTwo);
+                    maxHeight = findMax(maxWidth,maxHeight,placementBlockOne,placementBlockTwo);
                     areaArray[i] = maxHeight * widthSum;
                     multipleBeforeChar = 0;
                 }
@@ -109,7 +110,7 @@ public class AnnealingAlgCBadolato {
                     placementBlockOne = (Block)blockList.get(Integer.parseInt(stack.pop())- 1);
 
                     widthSum = widthSum + placementBlockOne.width;              
-                    maxHeight = findMax(maxHeight,placementBlockOne,placementBlockTwo);
+                    maxHeight = findMax(maxWidth,maxHeight,placementBlockOne,placementBlockTwo);
                     areaArray[i] = maxHeight * widthSum;
                     multipleBeforeChar = 0;
                 }
@@ -137,11 +138,12 @@ public class AnnealingAlgCBadolato {
         Block placementBlockOne = (Block) blockList.get(0);
         Block placementBlockTwo = (Block) blockList.get(0);
         int maxWidth = placementBlockOne.width;
+        int maxHeight = 0;
         int heightSum = placementBlockOne.height;
         int areaArray[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
         int multipleBeforeChar = 0;   
         
-        
+        //123V4V567VH89VHVH
         Stack<String> stack = new Stack<String>();
         for(int i = 0; i < allHorizontalPolish.length; i++){
                
@@ -150,7 +152,7 @@ public class AnnealingAlgCBadolato {
                     placementBlockOne = (Block)blockList.get(Integer.parseInt(stack.pop())- 2);             
                     placementBlockTwo = (Block)blockList.get(Integer.parseInt(stack.pop()));
                     heightSum = placementBlockOne.height + placementBlockTwo.height;
-                    maxWidth = findMax(maxWidth,placementBlockOne,placementBlockTwo);
+                    maxWidth = findMax(maxWidth,maxHeight,placementBlockOne,placementBlockTwo);
                     areaArray[i] = maxWidth * heightSum;
                     multipleBeforeChar = 0;
                 }
@@ -158,7 +160,7 @@ public class AnnealingAlgCBadolato {
                     placementBlockOne = (Block)blockList.get(Integer.parseInt(stack.pop())- 1);
 
                     heightSum = heightSum + placementBlockOne.height;
-                    maxWidth = findMax(maxWidth,placementBlockOne,placementBlockTwo);
+                    maxWidth = findMax(maxWidth,maxHeight,placementBlockOne,placementBlockTwo);
                     areaArray[i] = maxWidth * heightSum;
                     multipleBeforeChar = 0;
                 }            
@@ -187,7 +189,7 @@ public class AnnealingAlgCBadolato {
         int heightSum = placementBlockOne.height;
         int areaArray[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
         int multipleBeforeChar = 0;   
-        
+        //123V4V567VH89VHVH
         System.out.println("Polish Stack Traversal:");
         Stack<String> stack = new Stack<String>();
         for(int i = 0; i < polishExpression.length; i++){
@@ -197,8 +199,8 @@ public class AnnealingAlgCBadolato {
                     pop1 = Integer.parseInt(stack.pop())- 2;
                     pop2 = Integer.parseInt(stack.pop());
                     System.out.println();
-                    System.out.println("pop1: " + pop1 + " from Stack");
-                    System.out.println("pop2: " + pop2 + " from Stack");
+                    System.out.println("H pop1: " + pop1 + " from Stack");
+                    System.out.println("H pop2: " + pop2 + " from Stack");
                     System.out.println();
                     placementBlockOne = (Block)blockList.get(pop1 - 2);             
                     placementBlockTwo = (Block)blockList.get(pop2);
@@ -210,10 +212,10 @@ public class AnnealingAlgCBadolato {
                     System.out.println("Width Block 2: " + placementBlockTwo.width);
                     multipleBeforeChar = 0;
                 }
-                else{
-                    pop1 = Integer.parseInt(stack.pop());
+                else if (multipleBeforeChar == 1){
+                    pop1 = Integer.parseInt(stack.pop()) - 1;
                     System.out.println();
-                    System.out.println("pop1: " + pop1 + " from Stack");
+                    System.out.println("H pop1: " + pop1 + " from Stack");
                     System.out.println();
                     placementBlockOne = (Block)blockList.get(pop1);
                     System.out.println("Area Block 1: " + placementBlockOne.area);
@@ -221,15 +223,28 @@ public class AnnealingAlgCBadolato {
                     System.out.println("Width Block 1: " + placementBlockOne.width);
                     multipleBeforeChar = 0;
                 }
-               
+                else{
+                    if(!stack.empty()){
+                        pop1 = Integer.parseInt(stack.pop()) - 1;
+                        System.out.println();
+                        System.out.println("H pop1: " + pop1 + " from Stack");
+                        placementBlockOne = (Block)blockList.get(pop1);    
+                        System.out.println();
+                        System.out.println("Area Block 1: " + placementBlockOne.area);
+                        System.out.println("Height Block 1: " + placementBlockOne.height);
+                        System.out.println("Width Block 1: " + placementBlockOne.width);
+                        multipleBeforeChar = 0;
+                    }
+                }          
             }
+            //123V4V567VH89VHVH
             else if(polishExpression[i] == 'V'){
                 if(multipleBeforeChar > 1){
                     pop1 = Integer.parseInt(stack.pop());
                     pop2 = Integer.parseInt(stack.pop());
                     System.out.println();
-                    System.out.println("pop1: " + pop1 + " from Stack");
-                    System.out.println("pop2: " + pop2 + " from Stack");
+                    System.out.println("V pop1: " + pop1 + " from Stack");
+                    System.out.println("V pop2: " + pop2 + " from Stack");
                     System.out.println();
                     placementBlockOne = (Block)blockList.get(pop1 - 2);             
                     placementBlockTwo = (Block)blockList.get(pop2);
@@ -241,16 +256,29 @@ public class AnnealingAlgCBadolato {
                     System.out.println("Width Block 2: " + placementBlockTwo.width);
                     multipleBeforeChar = 0;
                 }
-                else{
-                    pop1 = Integer.parseInt(stack.pop());
+                else if (multipleBeforeChar == 1){
+                    pop1 = Integer.parseInt(stack.pop()) - 1;
                     System.out.println();
-                    System.out.println("pop1: " + pop1 + " from Stack");
+                    System.out.println("V pop1: " + pop1 + " from Stack");
                     placementBlockOne = (Block)blockList.get(pop1);    
                     System.out.println();
                     System.out.println("Area Block 1: " + placementBlockOne.area);
                     System.out.println("Height Block 1: " + placementBlockOne.height);
                     System.out.println("Width Block 1: " + placementBlockOne.width);
                     multipleBeforeChar = 0;
+                }
+                else{
+                    if(!stack.empty()){
+                        pop1 = Integer.parseInt(stack.pop()) - 1;
+                        System.out.println();
+                        System.out.println("V pop1: " + pop1 + " from Stack");
+                        placementBlockOne = (Block)blockList.get(pop1);    
+                        System.out.println();
+                        System.out.println("Area Block 1: " + placementBlockOne.area);
+                        System.out.println("Height Block 1: " + placementBlockOne.height);
+                        System.out.println("Width Block 1: " + placementBlockOne.width);
+                        multipleBeforeChar = 0;
+                    }
                 }
             }
             else{
@@ -269,16 +297,31 @@ public class AnnealingAlgCBadolato {
     }
     
     
-    public static int findMax(int currentMax, Block currentBlockOne, Block currentBlockTwo){
-        int max = currentMax;
-        if(max < currentBlockOne.height){
-            max = currentBlockOne.height;
-        }
-        else if(max < currentBlockTwo.height){  
-            max = currentBlockTwo.height;
-        }  
-        else{
+    public static int findMax(int maxWidth, int maxHeight, Block currentBlockOne, Block currentBlockTwo){
+        int max  = 0;
+        if(maxWidth == 0){
+            max = maxHeight;
+            if(max < currentBlockOne.height){
+                max = currentBlockOne.height;
+            }
+            else if(max < currentBlockTwo.height){  
+                max = currentBlockTwo.height;
+            }  
+            else{
 
+            }           
+        }
+        else{
+            max = maxWidth;
+            if(max < currentBlockOne.width){
+                max = currentBlockOne.width;
+            }
+            else if(max < currentBlockTwo.width){  
+                max = currentBlockTwo.width;
+            }  
+            else{
+
+            } 
         }
         return max;
     }
